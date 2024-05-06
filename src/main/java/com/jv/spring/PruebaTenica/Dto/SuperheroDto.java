@@ -23,14 +23,11 @@ public class SuperheroDto {
 	private String realName;
 	@JsonProperty("SuperPower")
 	private String superpower;
-	@JsonProperty("Age")
-	private int age;
-
 	
 	@Override
 	public String toString() {
-		return String.format("SuperheroesEntity[id=%d, heroName='%s', realName='%s', superpower='%s',age'%d']",
-		id, heroName, realName, superpower, age);
+		return String.format("SuperheroesEntity[id=%d, heroName='%s', realName='%s', superpower='%s'",
+		id, heroName, realName, superpower);
 	}
 
 

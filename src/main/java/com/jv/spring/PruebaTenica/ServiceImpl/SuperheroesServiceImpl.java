@@ -20,7 +20,6 @@ public class SuperheroesServiceImpl implements SuperheroesService {
 	private SuperheroRepository superheroRepo;
 	@Autowired
 	private MapStructMapper structMapper;
-
 	//Method to create a new superhero
 	@Override
 	public SuperheroDto createSuperhero(SuperheroDto sh) {
@@ -30,8 +29,8 @@ public class SuperheroesServiceImpl implements SuperheroesService {
 		superheroRepo.saveAndFlush(superheroEntity);
 		SuperheroDto newSuperhero = structMapper.superheroEntityToSuperheroDto(superheroEntity);
 		return newSuperhero;
-
 	}
+	
 	//Method to list all the superheroes
 	@Override
 	public List<SuperheroDto> getAllSuperheroes() {
@@ -45,14 +44,17 @@ public class SuperheroesServiceImpl implements SuperheroesService {
 		// Finally we return the list with all the superheroes
 		return allSuperheroes;
 	}
+	
 	//Method to get a specific superhero by the provided id
 	@Override
 	public SuperheroDto getSuperheroById(Long id) {
+		//First we have to make sure that the superhero exists in the DB, if not, an exception is thrown
 		SuperheroEntity superhero= superheroRepo.findById(id).orElseThrow(
 				() -> new SuperheroNotFoundException("Superhero with id: " + id + " was not found in the DB"));
 		SuperheroDto foundSuperhero = structMapper.superheroEntityToSuperheroDto(superhero);
 		return foundSuperhero;
 	}
+	
 	//Method to get all the superheroes that share a string in their name
 	@Override
 	public List<SuperheroDto> getAllSuperheroesContainingString(String string) {
@@ -65,12 +67,21 @@ public class SuperheroesServiceImpl implements SuperheroesService {
 		// Finally we return the list with all the superheroes
 		return allSuperheroesWithString;
 	}
+	
 	//Method to update an existing superhero
 	@Override
-	public SuperheroDto patchSuperhero(Long id, SuperheroEntity superheroEntity) {
-		// TODO Auto-generated method stub
-		return null;
+	public SuperheroDto patchSuperhero(Long id, SuperheroDto patchedSuperhero) {
+		//First we have to make sure that the superhero exists in the DB, if not, an exception is thrown
+		SuperheroEntity superheroEntity = superheroRepo.findById(id).orElseThrow(
+				() -> new SuperheroNotFoundException("Superhero with id: " + id + " was not found in the DB"));
+		//Then we copy the new values to the DB object and save it
+		structMapper.patch(structMapper.superheroDtoToSuperheroEntity(patchedSuperhero), superheroEntity);
+		superheroRepo.saveAndFlush(superheroEntity);
+		//Finally we take the new object and return it as a DTO with the new changes
+		patchedSuperhero = structMapper.superheroEntityToSuperheroDto(superheroEntity);
+		return patchedSuperhero;
 	}
+
 	//Method to delete an existing superhero
 	@Override
 	public void deleteSuperhero(Long id) {
@@ -80,4 +91,5 @@ public class SuperheroesServiceImpl implements SuperheroesService {
 		superheroRepo.deleteById(id);		
 	}
 
+	
 }

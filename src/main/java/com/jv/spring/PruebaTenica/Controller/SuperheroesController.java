@@ -52,8 +52,8 @@ public class SuperheroesController {
     }	
 	
 	@PatchMapping("/patchSuperhero/{id}")
-	public ResponseEntity<SuperheroDto> patchSuperhero(@PathVariable Long id, @RequestBody SuperheroEntity superheroEntity) {		
-		SuperheroDto patchedSuperhero =superheroesService.patchSuperhero(id, superheroEntity);
+	public ResponseEntity<SuperheroDto> patchSuperhero(@PathVariable Long id,@RequestBody SuperheroDto superheroDto) {		
+		SuperheroDto patchedSuperhero =superheroesService.patchSuperhero(id, superheroDto);
 		return ResponseEntity.ok(patchedSuperhero) ;
 	}
 	

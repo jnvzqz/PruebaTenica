@@ -26,12 +26,11 @@ public class SuperheroEntity {
 	private String heroName;
 	private String realName;
 	private String superpower;
-	private int age;
 
 	@Override
 	public String toString() {
-		return String.format("SuperheroesEntity[id=%d, heroName='%s', realName='%s', superpower='%s',age'%d']", id,
-				heroName, realName, superpower, age);
+		return String.format("SuperheroesEntity[id=%d, heroName='%s', realName='%s', superpower='%s']", id,
+				heroName, realName, superpower);
 	}
 
 }

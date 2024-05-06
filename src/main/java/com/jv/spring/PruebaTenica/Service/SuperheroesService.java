@@ -17,6 +17,6 @@ public interface SuperheroesService {
 
 	void deleteSuperhero(Long id);
 
-	SuperheroDto patchSuperhero(Long id, SuperheroEntity superheroEntity);
+	SuperheroDto patchSuperhero(Long id, SuperheroDto sh);
 	
 }

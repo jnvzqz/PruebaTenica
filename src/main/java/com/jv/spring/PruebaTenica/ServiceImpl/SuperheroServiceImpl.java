@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +41,7 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * @return newSuperhero The new object added to the DB after it is turned back into a DTO. 
 	 */
 	
+	@Cacheable(value = "entity", cacheManager = "springCM")
 	@Override
 	public SuperheroDto createSuperhero(SuperheroDto sh) {
 		SuperheroEntity superheroEntity = structMapper.superheroDtoToSuperheroEntity(sh);
@@ -52,8 +56,8 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * by going through the list, converting them into a DTO and adding them into 
 	 * the final list.
 	 *
-	 * @param pages The number of pages
-	 * @param pageSize The size of the page
+	 * @param pages The number of pages.
+	 * @param pageSize The size of the page.
 	 * @return allSuperheroes The list of all the superheroes.
 	 */
 	
@@ -84,11 +88,11 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * Gets an specific superhero from the DB by the provided id and returning it as a DTO. 
 	 * If the specified id does not exist in the DB an exception ins thrown.
 	 * 
-	 * @param id The specified id
-	 * @return foundSuperhero The superhero found by the id
-	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB
+	 * @param id The specified id.
+	 * @return foundSuperhero The superhero found by the id.
+	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB.
 	 */
-	
+	@Cacheable(value = "entity", cacheManager = "springCM")
 	@Override
 	public SuperheroDto getSuperheroById(Long id) {
 		SuperheroEntity superhero= superheroRepo.findById(id).orElseThrow(
@@ -103,9 +107,10 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * the final list.
 	 * 
 	 * @param string The string specified in the petition.
-	 * @return allSuperheroesWithString All the superheroes found that share that string
+	 * @return allSuperheroesWithString All the superheroes found that share that string.
 	 */
 	
+	@Cacheable(value = "entity", cacheManager = "springCM")
 	@Override
 	public List<SuperheroDto> getAllSuperheroesContainingString(String string) {
 		List<SuperheroEntity> superheroes = superheroRepo.findByHeroNameContainingIgnoreCase(string);
@@ -125,9 +130,10 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * @param id The specified id.
 	 * @param patchedSuperhero The data to be changed in the superhero object.
 	 * @return patchedSuperhero The superhero that was updated with the new changes.
-	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB
+	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB.
 	 */
 	
+	@Cacheable(value = "entity", cacheManager = "springCM")
 	@Override
 	public SuperheroDto patchSuperhero(Long id, SuperheroDto patchedSuperhero) {
 		SuperheroEntity superheroEntity = superheroRepo.findById(id).orElseThrow(
@@ -142,10 +148,11 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * Deletes an specific superhero from the DB by the specified id. 
 	 * If the specified id does not exist in the DB an exception ins thrown.
 	 * 
-	 * @param id The specified id
-	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB
+	 * @param id The specified id.
+	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB.
 	 */	
 	
+	@Cacheable(value = "entity", cacheManager = "springCM")
 	@Override
 	public void deleteSuperhero(Long id) {
 		superheroRepo.findById(id).orElseThrow(

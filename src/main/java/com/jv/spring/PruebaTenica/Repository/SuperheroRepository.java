@@ -9,11 +9,24 @@ import com.jv.spring.PruebaTenica.Entity.SuperheroEntity;
 @Repository
 public interface SuperheroRepository extends JpaRepository<SuperheroEntity, Long> {
 	
-	//finds all superheroes
+	/**
+	 * Finds a all the superheroes.
+	 * 
+	 * */
 	List<SuperheroEntity> findAll();
-	//finds a superhero by the provided id 
+	
+	/**
+	 * Finds a superhero by the provided id.
+	 * 
+	 * @param id The provided id.
+	 * */
 	SuperheroEntity findById(long id);
-	//finds all superheroes whose name contains a specific string 
+	
+	/**
+	 * Finds all superheroes whose name contains a specific string.
+	 * 
+	 * @param heroName The specified string.
+	 * */
 	List<SuperheroEntity> findByHeroNameContainingIgnoreCase(String heroName);	
 	
 }

@@ -25,10 +25,19 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 public class SuperheroesController {
-
+	
+	/**
+	 * All the logic is removed from the controller and done in the service.
+	 */
+	
+	/**
+	 * Post mapping for the creation of a new superhero.
+	 * 
+	 * @param superheroDto The body of the request in dto format.
+	 * @Return newSuperhero The created new superhero and the response.
+	 */
 	@Autowired
 	private SuperheroService superheroesService;
-		//All the logic is removed from the controller and done in the service
 	@TrackExecutionTime
 	@PostMapping("/addSuperhero")
 	public ResponseEntity<SuperheroDto> addSuperhero(@RequestBody SuperheroDto superheroDto) {
@@ -36,6 +45,13 @@ public class SuperheroesController {
 		log.info("New superhero created with id: "+ newSuperhero.getId());
 		return ResponseEntity.ok(newSuperhero) ;
 	}
+	/**
+	 * Get mapping for the listing of all superheroes.
+	 * 
+	 * @param pages The number of pages.
+	 * @param pageSize The size of the page.
+	 * @return allSuperheroes The list of all the superheroes with pagination.
+	 */
 	@TrackExecutionTime
 	@GetMapping("/getAllSuperheroes")
     public SuperheroResponse getAllSuperheroes(
@@ -43,6 +59,13 @@ public class SuperheroesController {
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
         return superheroesService.getAllSuperheroes(pages, pageSize);
     }
+	
+	/**
+	 * Get mapping for the listing of an specific superhero.
+	 * 
+	 * @param Id The specified id.
+	 * @Return superhero The superhero found by the id and the response.
+	 */
 	@TrackExecutionTime
 	@GetMapping("/getSuperheroById/{id}")
 	public ResponseEntity<SuperheroDto> getSuperheroById(@PathVariable Long id) {
@@ -50,11 +73,26 @@ public class SuperheroesController {
 		log.info("New superhero with id: "+ superhero.getId() + "was found in the DB");
         return ResponseEntity.ok(superhero);
     }
+	
+	/**
+	 * Get mapping for listing of all superheroes that share a string in their name.
+	 * 
+	 * @param name The string specified in the petition.
+	 * @Return superheroesContainingString All the superheroes found that share that string.
+	 */
 	@TrackExecutionTime
 	@GetMapping("/getSuperheroByName/{name}")
 	public List<SuperheroDto> getSuperheroByName(@PathVariable String name) {
 		return superheroesService.getAllSuperheroesContainingString(name);
-    }	
+    }
+	
+	/**
+	 * Patch mapping for updating a superhero.
+	 * 
+	 * @param Id The specified id.
+	 * @param superheroDto The body of the request in dto format.
+	 * @Return patchedSuperhero The updated superhero.
+	 */
 	@TrackExecutionTime
 	@PatchMapping("/patchSuperhero/{id}")
 	public ResponseEntity<SuperheroDto> patchSuperhero(@PathVariable Long id,@RequestBody SuperheroDto superheroDto) {		
@@ -62,6 +100,13 @@ public class SuperheroesController {
 		log.info("New superhero with id: "+ patchedSuperhero.getId() + "was updated in the DB");
 		return ResponseEntity.ok(patchedSuperhero) ;
 	}
+	
+	/**
+	 * Delete mapping for the deletion of a superhero.
+	 * 
+	 * @param Id The specified id.
+	 * @Return response The response of the petition.
+	 */
 	@TrackExecutionTime
 	@DeleteMapping("/deleteSuperhero/{id}")
 	public ResponseEntity<Void> deleteSuperhero(@PathVariable Long id) {		
@@ -70,5 +115,4 @@ public class SuperheroesController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-
 }

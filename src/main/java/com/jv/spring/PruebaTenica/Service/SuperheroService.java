@@ -6,17 +6,19 @@ import com.jv.spring.PruebaTenica.Dto.SuperheroDto;
 import com.jv.spring.PruebaTenica.Dto.SuperheroResponse;
 
 public interface SuperheroService {
-
-	SuperheroResponse getAllSuperheroes(int pages, int pageSize);
-
-	List<SuperheroDto> getAllSuperheroesContainingString(String string);
-
+	
 	SuperheroDto createSuperhero(SuperheroDto sh);
 
+	SuperheroResponse getAllSuperheroes(int pages, int pageSize);
+	
 	SuperheroDto getSuperheroById(Long id);
+
+	List<SuperheroDto> getAllSuperheroesContainingString(String string);	
+
+	SuperheroDto patchSuperhero(Long id, SuperheroDto sh);
 
 	void deleteSuperhero(Long id);
 
-	SuperheroDto patchSuperhero(Long id, SuperheroDto sh);
+	
 	
 }

@@ -11,12 +11,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
-
+public class SecurityConfig {	
 	@Bean
 	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-		//security configuration: at this moment it is disabled for development
-		//TODO: Enable proper security
 		http.authorizeHttpRequests((requests) -> requests.requestMatchers("/localTestDB/**").authenticated()
 				.requestMatchers("/h2-console/**").permitAll());
 		http.authorizeHttpRequests((requests) -> requests.anyRequest().permitAll());

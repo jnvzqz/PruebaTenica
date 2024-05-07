@@ -20,72 +20,102 @@ public class SuperheroesServiceImpl implements SuperheroesService {
 	private SuperheroRepository superheroRepo;
 	@Autowired
 	private MapStructMapper structMapper;
-	//Method to create a new superhero
+	
+	/**
+	 * Creates a new superhero by taking the received DTO and turning it into a DB object and saving it
+	 * into the DB. 
+	 * The ids are set to be generated sequentially.
+	 * 
+	 * @params sh The received DTO with the data of the request.
+	 * @return newSuperhero The new object added to the DB after it is turned back into a DTO. 
+	 */	
 	@Override
 	public SuperheroDto createSuperhero(SuperheroDto sh) {
-		// We take the object from the DTO an turn it into a DB object and then save it  to the DB
-		// for this task I decided to create ids sequentially for practical reasons, but a random UUID could be assigned as well
 		SuperheroEntity superheroEntity = structMapper.superheroDtoToSuperheroEntity(sh);
 		superheroRepo.saveAndFlush(superheroEntity);
 		SuperheroDto newSuperhero = structMapper.superheroEntityToSuperheroDto(superheroEntity);
 		return newSuperhero;
 	}
 	
-	//Method to list all the superheroes
+
+	/**
+	 * Lists all the superheroes by retrieving them from the DB and converting them into a DTO
+	 * by going through the list, converting them individually into a DTO and adding them into 
+	 * the final list.
+	 *
+	 * @return allSuperheroes The list of all the superheroes.
+	 */
 	@Override
 	public List<SuperheroDto> getAllSuperheroes() {
-		// We take all the superheroes from the DB
 		List<SuperheroEntity> superheroes = superheroRepo.findAll();
 		List<SuperheroDto> allSuperheroes = new ArrayList<>();
-		// To transform the DB objects into a DTO we go through the list, convert each  object and add them to the final list
 		for (SuperheroEntity sh : superheroes) {
 			allSuperheroes.add(structMapper.superheroEntityToSuperheroDto(sh));
 		}
-		// Finally we return the list with all the superheroes
 		return allSuperheroes;
 	}
 	
-	//Method to get a specific superhero by the provided id
+	/**
+	 * Gets an specific superhero from the DB by the provided id and returning it as a DTO. 
+	 * If the specified id does not exist in the DB an exception ins thrown.
+	 * 
+	 * @params id The specified id
+	 * @return foundSuperhero The superhero found by the id
+	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB
+	 */
 	@Override
 	public SuperheroDto getSuperheroById(Long id) {
-		//First we have to make sure that the superhero exists in the DB, if not, an exception is thrown
 		SuperheroEntity superhero= superheroRepo.findById(id).orElseThrow(
 				() -> new SuperheroNotFoundException("Superhero with id: " + id + " was not found in the DB"));
 		SuperheroDto foundSuperhero = structMapper.superheroEntityToSuperheroDto(superhero);
 		return foundSuperhero;
 	}
 	
-	//Method to get all the superheroes that share a string in their name
+	/**
+	 * Lists all the superheroes that share a string in their name by retrieving them from the DB and converting 
+	 * them into a DTO by going through the list, converting them individually into a DTO and adding them into 
+	 * the final list.
+	 * 
+	 * @param string The string specified in the petition.
+	 * @return allSuperheroesWithString All the superheroes found that share that string
+	 */
 	@Override
 	public List<SuperheroDto> getAllSuperheroesContainingString(String string) {
 		List<SuperheroEntity> superheroes = superheroRepo.findByHeroNameContainingIgnoreCase(string);
 		List<SuperheroDto> allSuperheroesWithString = new ArrayList<>();
-		// To transform the DB objects into a DTO we go through the list, convert each object and add them to the final list
 		for (SuperheroEntity sh : superheroes) {
 			allSuperheroesWithString.add(structMapper.superheroEntityToSuperheroDto(sh));
 		}
-		// Finally we return the list with all the superheroes
 		return allSuperheroesWithString;
 	}
 	
-	//Method to update an existing superhero
+	/**
+	 * Updates an existing superhero by retrieving it from the DB and patching the changed fields with a mapper
+	 * and then returning the new patched object from the DB. If the specified id does not exist in the DB 
+	 * an exception ins thrown.
+	 * 
+	 * @params id The specified id.
+	 * @return patchedSuperhero The superhero that was updated with the new changes.
+	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB
+	 */
 	@Override
 	public SuperheroDto patchSuperhero(Long id, SuperheroDto patchedSuperhero) {
-		//First we have to make sure that the superhero exists in the DB, if not, an exception is thrown
 		SuperheroEntity superheroEntity = superheroRepo.findById(id).orElseThrow(
 				() -> new SuperheroNotFoundException("Superhero with id: " + id + " was not found in the DB"));
-		//Then we copy the new values to the DB object and save it
 		structMapper.patch(structMapper.superheroDtoToSuperheroEntity(patchedSuperhero), superheroEntity);
 		superheroRepo.saveAndFlush(superheroEntity);
-		//Finally we take the new object and return it as a DTO with the new changes
 		patchedSuperhero = structMapper.superheroEntityToSuperheroDto(superheroEntity);
 		return patchedSuperhero;
 	}
 
-	//Method to delete an existing superhero
-	@Override
+	/**
+	 * Deletes an specific superhero from the DB by the specified id. 
+	 * If the specified id does not exist in the DB an exception ins thrown.
+	 * 
+	 * @params id The specified id
+	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB
+	 */	@Override
 	public void deleteSuperhero(Long id) {
-		//Before deleting the object we check if it exists in the database
 		superheroRepo.findById(id).orElseThrow(
 				() -> new SuperheroNotFoundException("Superhero with id: " + id + " was not found in the DB"));
 		superheroRepo.deleteById(id);		

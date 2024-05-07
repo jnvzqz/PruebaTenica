@@ -3,11 +3,11 @@ package com.jv.spring.PruebaTenica.Service;
 import java.util.List;
 
 import com.jv.spring.PruebaTenica.Dto.SuperheroDto;
-import com.jv.spring.PruebaTenica.Entity.SuperheroEntity;
+import com.jv.spring.PruebaTenica.Dto.SuperheroResponse;
 
-public interface SuperheroesService {
+public interface SuperheroService {
 
-	List<SuperheroDto> getAllSuperheroes();
+	SuperheroResponse getAllSuperheroes(int pages, int pageSize);
 
 	List<SuperheroDto> getAllSuperheroesContainingString(String string);
 

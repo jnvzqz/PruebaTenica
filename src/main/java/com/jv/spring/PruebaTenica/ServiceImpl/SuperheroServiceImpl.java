@@ -1,14 +1,13 @@
 package com.jv.spring.PruebaTenica.ServiceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.jv.spring.PruebaTenica.Dto.SuperheroDto;
 import com.jv.spring.PruebaTenica.Dto.SuperheroResponse;
@@ -18,8 +17,9 @@ import com.jv.spring.PruebaTenica.Mapper.MapStructMapper;
 import com.jv.spring.PruebaTenica.Repository.SuperheroRepository;
 import com.jv.spring.PruebaTenica.Service.SuperheroService;
 
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class SuperheroServiceImpl implements SuperheroService {
 
@@ -36,7 +36,8 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * 
 	 * @param sh The received DTO with the data of the request.
 	 * @return newSuperhero The new object added to the DB after it is turned back into a DTO. 
-	 */	
+	 */
+	
 	@Override
 	public SuperheroDto createSuperhero(SuperheroDto sh) {
 		SuperheroEntity superheroEntity = structMapper.superheroDtoToSuperheroEntity(sh);
@@ -55,6 +56,7 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * @param pageSize The size of the page
 	 * @return allSuperheroes The list of all the superheroes.
 	 */
+	
 	@Override
 	public SuperheroResponse getAllSuperheroes(int pages, int pageSize) {
 		Pageable pageable = PageRequest.of(pages, pageSize);
@@ -72,9 +74,10 @@ public class SuperheroServiceImpl implements SuperheroService {
         superheroResponse.setTotalElements(superheroes.getTotalElements());
         superheroResponse.setTotalPages(superheroes.getTotalPages());
         superheroResponse.setLast(superheroes.isLast());
-        
-		return superheroResponse;
+		
+        log.info(superheroes.getTotalElements() +" where found in the DB");
 
+		return superheroResponse;
 	}
 	
 	/**
@@ -85,6 +88,7 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * @return foundSuperhero The superhero found by the id
 	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB
 	 */
+	
 	@Override
 	public SuperheroDto getSuperheroById(Long id) {
 		SuperheroEntity superhero= superheroRepo.findById(id).orElseThrow(
@@ -101,11 +105,14 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * @param string The string specified in the petition.
 	 * @return allSuperheroesWithString All the superheroes found that share that string
 	 */
+	
 	@Override
 	public List<SuperheroDto> getAllSuperheroesContainingString(String string) {
 		List<SuperheroEntity> superheroes = superheroRepo.findByHeroNameContainingIgnoreCase(string);
 		List<SuperheroDto> allSuperheroesWithString = superheroes.stream()
 				.map(s -> structMapper.superheroEntityToSuperheroDto(s)).collect(Collectors.toList());
+		
+        log.info(superheroes.size() +" where found in the DB with the matching string");
 
 		return allSuperheroesWithString;
 	}
@@ -120,6 +127,7 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * @return patchedSuperhero The superhero that was updated with the new changes.
 	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB
 	 */
+	
 	@Override
 	public SuperheroDto patchSuperhero(Long id, SuperheroDto patchedSuperhero) {
 		SuperheroEntity superheroEntity = superheroRepo.findById(id).orElseThrow(
@@ -136,7 +144,9 @@ public class SuperheroServiceImpl implements SuperheroService {
 	 * 
 	 * @param id The specified id
 	 * @throws SuperheroNotFoundException Exception that notifies that the specified id does not exist in the DB
-	 */	@Override
+	 */	
+	
+	@Override
 	public void deleteSuperhero(Long id) {
 		superheroRepo.findById(id).orElseThrow(
 				() -> new SuperheroNotFoundException("Superhero with id: " + id + " was not found in the DB"));

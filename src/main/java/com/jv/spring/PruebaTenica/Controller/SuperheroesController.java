@@ -1,7 +1,6 @@
 package com.jv.spring.PruebaTenica.Controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jv.spring.PruebaTenica.Advice.TrackExecutionTime;
 import com.jv.spring.PruebaTenica.Dto.SuperheroDto;
 import com.jv.spring.PruebaTenica.Dto.SuperheroResponse;
 import com.jv.spring.PruebaTenica.Service.SuperheroService;
@@ -29,39 +29,44 @@ public class SuperheroesController {
 	@Autowired
 	private SuperheroService superheroesService;
 		//All the logic is removed from the controller and done in the service
+	@TrackExecutionTime
 	@PostMapping("/addSuperhero")
 	public ResponseEntity<SuperheroDto> addSuperhero(@RequestBody SuperheroDto superheroDto) {
 		SuperheroDto newSuperhero = superheroesService.createSuperhero(superheroDto);
 		log.info("New superhero created with id: "+ newSuperhero.getId());
 		return ResponseEntity.ok(newSuperhero) ;
 	}
-
+	@TrackExecutionTime
 	@GetMapping("/getAllSuperheroes")
     public SuperheroResponse getAllSuperheroes(
     		@RequestParam(value = "pages", defaultValue = "0", required = false) int pages,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
         return superheroesService.getAllSuperheroes(pages, pageSize);
     }
-	
+	@TrackExecutionTime
 	@GetMapping("/getSuperheroById/{id}")
 	public ResponseEntity<SuperheroDto> getSuperheroById(@PathVariable Long id) {
 		SuperheroDto superhero = superheroesService.getSuperheroById(id);
+		log.info("New superhero with id: "+ superhero.getId() + "was found in the DB");
         return ResponseEntity.ok(superhero);
-    }	
+    }
+	@TrackExecutionTime
 	@GetMapping("/getSuperheroByName/{name}")
 	public List<SuperheroDto> getSuperheroByName(@PathVariable String name) {
 		return superheroesService.getAllSuperheroesContainingString(name);
     }	
-	
+	@TrackExecutionTime
 	@PatchMapping("/patchSuperhero/{id}")
 	public ResponseEntity<SuperheroDto> patchSuperhero(@PathVariable Long id,@RequestBody SuperheroDto superheroDto) {		
 		SuperheroDto patchedSuperhero =superheroesService.patchSuperhero(id, superheroDto);
+		log.info("New superhero with id: "+ patchedSuperhero.getId() + "was updated in the DB");
 		return ResponseEntity.ok(patchedSuperhero) ;
 	}
-	
+	@TrackExecutionTime
 	@DeleteMapping("/deleteSuperhero/{id}")
 	public ResponseEntity<Void> deleteSuperhero(@PathVariable Long id) {		
 		superheroesService.deleteSuperhero(id);
+		log.info("Superhero with id: "+ id + "was deleted from the DB");
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	

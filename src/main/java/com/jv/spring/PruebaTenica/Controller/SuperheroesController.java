@@ -70,7 +70,7 @@ public class SuperheroesController {
 	@GetMapping("/getSuperheroById/{id}")
 	public ResponseEntity<SuperheroDto> getSuperheroById(@PathVariable Long id) {
 		SuperheroDto superhero = superheroesService.getSuperheroById(id);
-		log.info("New superhero with id: "+ superhero.getId() + "was found in the DB");
+		log.info("New superhero with id: "+ superhero.getId() + " was found in the DB");
         return ResponseEntity.ok(superhero);
     }
 	
@@ -97,7 +97,7 @@ public class SuperheroesController {
 	@PatchMapping("/patchSuperhero/{id}")
 	public ResponseEntity<SuperheroDto> patchSuperhero(@PathVariable Long id,@RequestBody SuperheroDto superheroDto) {		
 		SuperheroDto patchedSuperhero =superheroesService.patchSuperhero(id, superheroDto);
-		log.info("New superhero with id: "+ patchedSuperhero.getId() + "was updated in the DB");
+		log.info("New superhero with id: "+ patchedSuperhero.getId() + " was updated in the DB");
 		return ResponseEntity.ok(patchedSuperhero) ;
 	}
 	
@@ -111,7 +111,7 @@ public class SuperheroesController {
 	@DeleteMapping("/deleteSuperhero/{id}")
 	public ResponseEntity<Void> deleteSuperhero(@PathVariable Long id) {		
 		superheroesService.deleteSuperhero(id);
-		log.info("Superhero with id: "+ id + "was deleted from the DB");
+		log.info("Superhero with id: "+ id + " was deleted from the DB");
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
